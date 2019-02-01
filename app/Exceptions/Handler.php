@@ -57,11 +57,11 @@ class Handler extends ExceptionHandler
             'ip' => $request->ip(),
         ];
         $msg = $exception->getMessage();
-//        if (!empty($msg)){
-//            Log::error(json_encode($errArr));
-//        }else{
-//            exit;
-//        }
+        if (!empty($msg)){
+            Log::error(json_encode($errArr));
+        }else{
+            exit;
+        }
         return Response::apiResponse($exception->getCode(), $msg);
     }
 }
