@@ -50,14 +50,15 @@ class Response{
      * 接口返回
      * @param $status
      * @param $msg
-     * @param $data
-     * @return \Illuminate\Http\JsonResponse
+     * @param array $data
+     * @return void
      */
     public static function apiResponse($status, $msg, $data = array()){
-        return \Illuminate\Support\Facades\Response::json(array(
+        header("Content-type: application/json");
+        echo json_encode(array(
             'status' => $status,
-            'msg'    => $msg,
-            'data'   => $data
+            'msg' => $msg,
+            'data' => $data
         ));
     }
 

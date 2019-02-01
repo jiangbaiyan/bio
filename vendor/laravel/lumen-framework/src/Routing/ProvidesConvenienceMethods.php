@@ -2,6 +2,7 @@
 
 namespace Laravel\Lumen\Routing;
 
+use App\Exceptions\ParamValidateFailedException;
 use Closure as BaseClosure;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -64,10 +65,8 @@ trait ProvidesConvenienceMethods
         $validator = $this->getValidationFactory()->make($request->all(), $rules, $messages, $customAttributes);
 
         if ($validator->fails()) {
-            $this->throwValidationException($request, $validator);
+            throw new ParamValidateFailedException();
         }
-
-        return $this->extractInputFromRules($request, $rules);
     }
 
     /**

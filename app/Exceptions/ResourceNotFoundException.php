@@ -9,7 +9,7 @@
 
 namespace App\Exceptions;
 
-use Nos\Http\Response;
+use App\Library\Response;
 use Throwable;
 
 class ResourceNotFoundException extends \Exception{

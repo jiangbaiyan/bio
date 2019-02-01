@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use App\Library\Response;
 use Exception;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -46,7 +47,21 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        return Response::apiResponse($exception->getCode(), $exception->getMessage());
-        return parent::render($request, $exception);
+        $errArr = [
+            'status' => $exception->getCode(),
+            'msg' => $exception->getMessage(),
+            'fileName' => $exception->getFile(),
+            'line' => $exception->getLine(),
+            'url' => $request->fullUrl(),
+            'params' => $request->all(),
+            'ip' => $request->ip(),
+        ];
+        $msg = $exception->getMessage();
+//        if (!empty($msg)){
+//            Log::error(json_encode($errArr));
+//        }else{
+//            exit;
+//        }
+        return Response::apiResponse($exception->getCode(), $msg);
     }
 }
