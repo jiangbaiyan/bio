@@ -25,7 +25,7 @@ class Login extends Controller {
         $token = [
             'iss' => 'https://bio.hzcloudservice.com',
             'aud' => 'https://bio.hzcloudservice.com',
-            'lat' => $time,
+            'iat' => $time,
             'exp' => $time + 86400,
             'data' => [
                 'fName' => $request->get('fName'),

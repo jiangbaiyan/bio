@@ -333,7 +333,7 @@ class ComposerStaticInit3e3619de81b114490acd385abf515df7
         ),
         'App\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/App',
+            0 => __DIR__ . '/../..' . '/app',
         ),
     );
 
@@ -359,17 +359,18 @@ class ComposerStaticInit3e3619de81b114490acd385abf515df7
     );
 
     public static $classMap = array (
-        'App\\Console\\Kernel' => __DIR__ . '/../..' . '/App/Console/Kernel.php',
-        'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/App/Exceptions/Handler.php',
-        'App\\Exceptions\\OperateFailedException' => __DIR__ . '/../..' . '/App/Exceptions/OperateFailedException.php',
-        'App\\Exceptions\\ParamValidateFailedException' => __DIR__ . '/../..' . '/App/Exceptions/ParamValidateFailedException.php',
-        'App\\Exceptions\\PermissionDeniedException' => __DIR__ . '/../..' . '/App/Exceptions/PermissionDeniedException.php',
-        'App\\Exceptions\\ResourceNotFoundException' => __DIR__ . '/../..' . '/App/Exceptions/ResourceNotFoundException.php',
-        'App\\Exceptions\\UnauthorizedException' => __DIR__ . '/../..' . '/App/Exceptions/UnauthorizedException.php',
-        'App\\Http\\Controllers\\ExampleController' => __DIR__ . '/../..' . '/App/Http/Controllers/ExampleController.php',
-        'App\\Http\\Middleware\\Auth' => __DIR__ . '/../..' . '/App/Http/Middleware/Auth.php',
-        'App\\Library\\Request' => __DIR__ . '/../..' . '/App/Library/Request.php',
-        'App\\Library\\Response' => __DIR__ . '/../..' . '/App/Library/Response.php',
+        'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
+        'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Exceptions\\OperateFailedException' => __DIR__ . '/../..' . '/app/Exceptions/OperateFailedException.php',
+        'App\\Exceptions\\ParamValidateFailedException' => __DIR__ . '/../..' . '/app/Exceptions/ParamValidateFailedException.php',
+        'App\\Exceptions\\PermissionDeniedException' => __DIR__ . '/../..' . '/app/Exceptions/PermissionDeniedException.php',
+        'App\\Exceptions\\ResourceNotFoundException' => __DIR__ . '/../..' . '/app/Exceptions/ResourceNotFoundException.php',
+        'App\\Exceptions\\UnauthorizedException' => __DIR__ . '/../..' . '/app/Exceptions/UnauthorizedException.php',
+        'App\\Http\\Controllers\\Pc\\Common\\Login' => __DIR__ . '/../..' . '/app/Http/Controllers/Pc/Common/Login.php',
+        'App\\Http\\Controllers\\Pc\\Face\\Face' => __DIR__ . '/../..' . '/app/Http/Controllers/Pc/Face/Face.php',
+        'App\\Http\\Middleware\\Auth' => __DIR__ . '/../..' . '/app/Http/Middleware/Auth.php',
+        'App\\Library\\Request' => __DIR__ . '/../..' . '/app/Library/Request.php',
+        'App\\Library\\Response' => __DIR__ . '/../..' . '/app/Library/Response.php',
         'Carbon\\Carbon' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/Carbon.php',
         'Carbon\\CarbonInterval' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonInterval.php',
         'Carbon\\CarbonPeriod' => __DIR__ . '/..' . '/nesbot/carbon/src/Carbon/CarbonPeriod.php',
