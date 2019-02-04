@@ -65,9 +65,9 @@ $app->register(Illuminate\Redis\RedisServiceProvider::class);
 //     App\Http\Middleware\Auth::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+ $app->routeMiddleware([
+     'auth' => App\Http\Middleware\Auth::class,
+ ]);
 
 /*
 |--------------------------------------------------------------------------

@@ -12,14 +12,20 @@ Route::group(['prefix' => 'pc' ], function () {
         Route::get('login', 'Pc\Common\Login@login');
 
     });
-    Route::group(['prefix' => 'face'], function (){
 
-        //人脸预约
-        Route::post('reserve', 'Pc\Face\Face@reserve');
+    Route::group(['middleware' => 'auth'], function () {
 
-        //人脸比对
-        Route::post('compare', 'Pc\Face\Face@compare');
+        Route::group(['prefix' => 'face'], function (){
+
+            //人脸预约
+            Route::post('reserve', 'Pc\Face\Face@reserve');
+
+            //人脸比对
+            Route::post('compare', 'Pc\Face\Face@compare');
+        });
+
     });
+
 });
 
 /**
