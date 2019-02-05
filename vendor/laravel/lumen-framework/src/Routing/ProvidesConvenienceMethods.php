@@ -58,7 +58,7 @@ trait ProvidesConvenienceMethods
      * @param  array  $customAttributes
      * @return array
      *
-     * @throws ValidationException
+     * @throws ParamValidateFailedException
      */
     public function validate(Request $request, array $rules, array $messages = [], array $customAttributes = [])
     {

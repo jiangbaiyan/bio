@@ -1,4 +1,10 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: baiyanzzZ
+ * Date: 2019/1/13
+ * Time: 22:44
+ */
 
 namespace App\Http\Controllers\Pc\Common;
 
@@ -87,13 +93,11 @@ class Login extends Controller {
             'id_card' => $data['fIdCard'],
             'o_name' => $data['oName'],
             'organization' => $data['organization'],
-            'operation' => '操作员登录',
-            'state'  => 1
+            'operation' => MBioLog::OP_LOGIN,
+            'state'  => MBioLog::STATUS_SUCCESS
         ];
         try {
-            MBioLog::firstOrCreate([
-                'id_card' => $dbData['id_card']
-            ], $dbData);
+            MBioLog::create($dbData);
         } catch (\Exception $e){
             Log::error('login|insert_or_update_into_bio_log_failed|msg:' , json_encode($e->getMessage()));
             throw new OperateFailedException();

@@ -1,4 +1,11 @@
 <?php
+/**
+ * Created by PhpStorm.
+ * User: baiyanzzZ
+ * Date: 2019/1/10
+ * Time: 15:41
+ */
+
 
 namespace App\Http\Middleware;
 
