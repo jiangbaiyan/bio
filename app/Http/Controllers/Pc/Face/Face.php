@@ -32,12 +32,12 @@ class Face extends Controller {
             'face' => 'required|image'
         ]);
         $file = $request->file('face');
-        $dir = '/var/www/Bio/storage/face/' . date('Y') . '/' . date('md');
-        $fileName = md5(json_encode(User::getCurUser($request)));
+        $dir = storage_path( date('Y') . '/' . date('md'));
+        $fileName = md5(json_encode(User::getCurUser($request))) . '.' . $file->getClientOriginalExtension();
         $fullPath = $dir . '/' . $fileName;
         MBio::saveFile($file, $dir, $fileName);
         MBio::writeData($request, [
-            'face_data' => storage_path($fullPath),
+            'face_data' => $fullPath,
             'face_reserve_state' => MBio::STATUS_SUCCESS
         ]);
         MBioLog::writeLog($request, MBioLog::OP_FACE_RESERVE, MBioLog::STATUS_SUCCESS);

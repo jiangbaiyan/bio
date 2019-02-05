@@ -21,8 +21,8 @@ class User {
      */
     public static function getCurUser(Request $request) {
         $token = $request->header('Authorization');
-        $user = (array)JWT::decode($token, env('JWT_KEY'), ['HS256']);
-        return $user;
+        $data = JWT::decode($token, env('JWT_KEY'), ['HS256']);
+        return (array)$data->data;
     }
 
 }
