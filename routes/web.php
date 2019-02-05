@@ -9,7 +9,7 @@ Route::group(['prefix' => 'pc' ], function () {
     Route::group(['prefix' => 'common'], function (){
 
         //登录
-        Route::get('login', 'Pc\Common\Login@login');
+        Route::post('login', 'Pc\Common\Login@login');
 
     });
 
