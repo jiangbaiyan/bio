@@ -32,7 +32,7 @@ class Face extends Controller {
             'face' => 'required|image'
         ]);
         $file = $request->file('face');
-        $dir = storage_path( date('Y') . '/' . date('md'));
+        $dir = storage_path('picture/face/' . date('Y') . '/' . date('md'));
         $fileName = md5(json_encode(User::getCurUser($request))) . '.' . $file->getClientOriginalExtension();
         $fullPath = $dir . '/' . $fileName;
         MBio::saveFile($file, $dir, $fileName);
