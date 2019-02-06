@@ -12,7 +12,7 @@ namespace App\Model;
 use App\Exceptions\OperateFailedException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 
 class MBioLog extends Model {
 
@@ -42,9 +42,13 @@ class MBioLog extends Model {
      * @param $request
      * @param $operation
      * @param $state
+     * @return bool
      * @throws OperateFailedException
      */
-    public static function writeLog($request, $operation, $state) {
+    public static function writeLog(Request $request, $operation, $state) {
+        if (empty($request) || empty($operation) || empty($state)) {
+            return false;
+        }
         $user = User::getCurUser($request);
         $dbData = [
             'f_name' => $user['fName'],
@@ -60,6 +64,7 @@ class MBioLog extends Model {
             Log::error('mBioLog|insert_into_bio_log_failed|msg:' , json_encode($e->getMessage()));
             throw new OperateFailedException();
         }
+        return true;
     }
 
 }
