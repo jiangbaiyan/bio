@@ -48,13 +48,13 @@ class Request{
                     }
                 }
                 if ($i == $retry){
-                    Log::error('curl|send_request_error|url:' . $url . '|type:' . $type . '|postData:' .$postData . '|retry:' . $retry . '|curl_error:' . json_encode(curl_error($ch)));
+                    Log::error('curl|send_request_error|url:' . $url . '|type:' . $type . '|postData:' .json_encode($postData) . '|retry:' . $retry . '|curl_error:' . json_encode(curl_error($ch)));
                     throw new OperateFailedException();
                 }
             }
             curl_close($ch);
         } catch (\Exception $e) {
-            Log::error('curl|send_request_error|url:' . $url . '|type:' . $type . '|postData:' .$postData . '|retry:' . $retry . '|curl_exception:' . json_encode($e->getMessage()) . '|curl_error:' . json_encode(curl_error($ch)));
+            Log::error('curl|send_request_error|url:' . $url . '|type:' . $type . '|postData:' . json_encode($postData) . '|retry:' . $retry . '|curl_exception:' . json_encode($e->getMessage()) . '|curl_error:' . json_encode(curl_error($ch)));
             throw new OperateFailedException();
         }
         return $res;

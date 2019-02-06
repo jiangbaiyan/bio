@@ -57,20 +57,38 @@ class Face extends Controller {
      * 人脸比对,对接宇视科技接口
      * @param Request $request
      * @throws OperateFailedException
+     * @throws ParamValidateFailedException
      * @throws ResourceNotFoundException
      */
     public function compare(Request $request) {
+        $this->validate($request, [
+            'face' => 'required|image'
+        ]);
+        $newFile = $request->file('face');
         $bioData = MBio::getData($request);
-        $facePath = $bioData->face_data;
-        $file = MBio::readFile($facePath);
+        $oldFile = MBio::readFile($bioData->face_data);
+        $this->loadConfig();
+        $accessToken = $this->loginYs();
+        $this->doFaceCompare();
+        Response::apiSuccess();
+    }
+
+    /**
+     * 加载宇视服务器配置
+     * @return bool
+     * @throws OperateFailedException
+     */
+    private function loadConfig() {
         $this->host = env('FACE_HOST');
         $this->port = env('FACE_PORT');
         $this->userName = env('FACE_USERNAME');
         $this->password = env('FACE_PASSWORD');
-        $accessToken = $this->loginYs();
-        Response::apiSuccess($accessToken);
+        if (empty($this->host) || empty($this->port) || empty($this->userName) || empty($this->password)) {
+            Log::error('face|empty_config|host:' . $this->host . '|port:' . $this->port . '|userName:' . $this->userName . '|password:' . $this->password);
+            throw new OperateFailedException();
+        }
+        return true;
     }
-
     /**
      * 宇视接口统一登录
      * @return mixed
@@ -103,5 +121,12 @@ class Face extends Controller {
             throw new OperateFailedException();
         }
         return $res['AccessToken'];
+    }
+
+    /**
+     * 人脸比对
+     */
+    private function doFaceCompare() {
+
     }
 }
