@@ -16,9 +16,16 @@ use App\Model\MBio;
 use App\Model\MBioLog;
 use App\Model\User;
 use Illuminate\Http\Request;
+use App\Library\Request as SendRequest;
+use Illuminate\Support\Facades\Log;
 use Laravel\Lumen\Routing\Controller;
 
 class Face extends Controller {
+
+    private $host;
+    private $port;
+    private $userName;
+    private $password;
 
     /**
      * 人脸预约
@@ -47,7 +54,7 @@ class Face extends Controller {
     }
 
     /**
-     * 人脸比对
+     * 人脸比对,对接宇视科技接口
      * @param Request $request
      * @throws OperateFailedException
      * @throws ResourceNotFoundException
@@ -56,5 +63,45 @@ class Face extends Controller {
         $bioData = MBio::getData($request);
         $facePath = $bioData->face_data;
         $file = MBio::readFile($facePath);
+        $this->host = env('FACE_HOST');
+        $this->port = env('FACE_PORT');
+        $this->userName = env('FACE_USERNAME');
+        $this->password = env('FACE_PASSWORD');
+        $accessToken = $this->loginYs();
+        Response::apiSuccess($accessToken);
+    }
+
+    /**
+     * 宇视接口统一登录
+     * @return mixed
+     * @throws OperateFailedException
+     */
+    private function loginYs() {
+        $url = sprintf("http://%s:%s/VIID/login", $this->host, $this->port);
+        $res = SendRequest::send('POST', $url);
+        $res = json_decode($res, true);
+        if (empty($res['AccessCode'])) {
+            Log::error('face|login_Ys_first_failed|res:' . json_encode($res));
+            throw new OperateFailedException();
+        }
+        $accessCode = $res['AccessCode'];
+        $secondLoginParam = [
+            'LoginSignature' => md5(base64_encode($this->userName). $accessCode . md5($this->password)),
+            'UserName'       => $this->userName,
+            'AccessCode'     => $accessCode
+        ];
+        $jsonParam = json_encode($secondLoginParam);
+        $res = SendRequest::send('POST', $url, $jsonParam, [
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: application/json; charset=utf-8',
+                'Content-Length: ' . strlen($jsonParam)
+            ]
+        ]);
+        $res = json_decode($res, true);
+        if (empty($res['AccessToken'])) {
+            Log::error('face|login_Ys_second_failed|res:' . json_encode($res));
+            throw new OperateFailedException();
+        }
+        return $res['AccessToken'];
     }
 }
