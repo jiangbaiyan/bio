@@ -34,7 +34,7 @@ class Auth
         try {
             JWT::decode($token, env('JWT_KEY'), ['HS256']);
         } catch (\Exception $e) {
-            Log::error('auth|decode_token_failed|msg:' , json_encode($e->getMessage()));
+            Log::error('auth|decode_token_failed|msg:' . json_encode($e->getMessage()));
             throw new UnauthorizedException();
         }
         return $next($request);
