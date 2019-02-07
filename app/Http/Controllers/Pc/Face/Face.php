@@ -64,13 +64,20 @@ class Face extends Controller {
         $this->validate($request, [
             'face' => 'required|image'
         ]);
-        $newFile = $request->file('face');
+        $newFile = $request->file('face')->getRealPath();
         $user = User::getCurUser($request);
         $bioData = MBio::getData($user);
-        $oldFile = MBio::readFile($bioData->face_data);
+        $oldFile = $bioData->face_data;
         $this->loadConfig();
         $accessToken = $this->loginYs();
         $res = $this->doFaceCompare($oldFile, $newFile, $accessToken);
+        if ($res) {
+            MBio::writeData($user, ['face_compare_state' => MBio::STATUS_SUCCESS]);
+            MBioLog::writeLog($user, MBioLog::OP_FACE_COMPARE, MBioLog::STATUS_SUCCESS);
+        } else {
+            MBio::writeData($user, ['face_compare_state' => MBio::STATUS_FAILED]);
+            MBioLog::writeLog($user, MBioLog::OP_FACE_COMPARE, MBioLog::STATUS_FAILED);
+        }
         Response::apiSuccess(['result' => $res]);
     }
 
@@ -140,8 +147,8 @@ class Face extends Controller {
                 'ThriftDesFaceInfo' => [],
                 'ThriftSrcFaceInfo' => []
             ]),
-            'FaceA' => $faceA,
-            'FaceB' => $faceB
+            'FaceA' => new \CURLFile($faceA),
+            'FaceB' => new \CURLFile($faceB)
         ];
         $res = SendRequest::send('POST', $url, $param, [
             CURLOPT_HTTPHEADER => [
@@ -149,7 +156,13 @@ class Face extends Controller {
             ]
         ]);
         $res = json_decode($res, true);
-        var_dump($res);exit;
-        return $res;
+        if ($res['ErrCode']) {
+            Log::error('face|face_Ys_compare_failed|res:' . json_encode($res));
+            throw new OperateFailedException();
+        }
+        if ($res['Result'] < 0.9) {
+            return false;
+        }
+        return true;
     }
 }

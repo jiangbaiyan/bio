@@ -11,7 +11,6 @@ namespace App\Model;
 use App\Exceptions\OperateFailedException;
 use App\Exceptions\ResourceNotFoundException;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
 class MBio extends Model {
@@ -34,7 +33,7 @@ class MBio extends Model {
      * @throws ResourceNotFoundException
      */
     public static function getData($user) {
-        if (empty($request)) {
+        if (empty($user)) {
             return false;
         }
         $bioData = MBio::where('id_card', $user['fIdCard'])->first();
