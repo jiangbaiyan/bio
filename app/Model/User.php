@@ -22,7 +22,7 @@ class User {
     public static function getCurUser(Request $request) {
         $token = $request->header('Authorization');
         $data = JWT::decode($token, env('JWT_KEY'), ['HS256']);
-        return (array)$data->data;
+        return (array)($data->data);
     }
 
 }

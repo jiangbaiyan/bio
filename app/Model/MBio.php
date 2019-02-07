@@ -29,15 +29,14 @@ class MBio extends Model {
 
     /**
      * 获取当前用户生物特征数据
-     * @param $request
+     * @param $user
      * @return bool
      * @throws ResourceNotFoundException
      */
-    public static function getData(Request $request) {
+    public static function getData($user) {
         if (empty($request)) {
             return false;
         }
-        $user = User::getCurUser($request);
         $bioData = MBio::where('id_card', $user['fIdCard'])->first();
         if (!$bioData) {
             Log::error('mBio|bio_data_empty');
@@ -48,14 +47,14 @@ class MBio extends Model {
 
     /**
      * 录入家属生物特征数据
-     * @param $request
+     * @param $user
      * @param $data
      * @return bool
      * @throws OperateFailedException
      * @throws ResourceNotFoundException
      */
-    public static function writeData(Request $request, $data) {
-        $bioData = self::getData($request, $data);
+    public static function writeData($user, $data) {
+        $bioData = self::getData($user);
         try {
             $bioData->update($data);
         } catch (\Exception $e) {

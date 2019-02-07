@@ -39,17 +39,16 @@ class MBioLog extends Model {
 
     /**
      * 操作日志记录
-     * @param $request
+     * @param $user
      * @param $operation
      * @param $state
      * @return bool
      * @throws OperateFailedException
      */
-    public static function writeLog(Request $request, $operation, $state) {
+    public static function writeLog($user, $operation, $state) {
         if (empty($request) || empty($operation) || empty($state)) {
             return false;
         }
-        $user = User::getCurUser($request);
         $dbData = [
             'f_name' => $user['fName'],
             'id_card' => $user['fIdCard'],

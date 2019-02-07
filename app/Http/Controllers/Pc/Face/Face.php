@@ -49,7 +49,7 @@ class Face extends Controller {
             'face_data' => $fullPath,
             'face_reserve_state' => MBio::STATUS_SUCCESS
         ]);
-        MBioLog::writeLog($request, MBioLog::OP_FACE_RESERVE, MBioLog::STATUS_SUCCESS);
+        MBioLog::writeLog($user, MBioLog::OP_FACE_RESERVE, MBioLog::STATUS_SUCCESS);
         Response::apiSuccess();
     }
 
@@ -65,7 +65,8 @@ class Face extends Controller {
             'face' => 'required|image'
         ]);
         $newFile = $request->file('face');
-        $bioData = MBio::getData($request);
+        $user = User::getCurUser($request);
+        $bioData = MBio::getData($user);
         $oldFile = MBio::readFile($bioData->face_data);
         $this->loadConfig();
         $accessToken = $this->loginYs();
