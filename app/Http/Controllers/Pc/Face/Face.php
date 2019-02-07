@@ -70,8 +70,8 @@ class Face extends Controller {
         $oldFile = MBio::readFile($bioData->face_data);
         $this->loadConfig();
         $accessToken = $this->loginYs();
-        $this->doFaceCompare();
-        Response::apiSuccess();
+        $res = $this->doFaceCompare($oldFile, $newFile, $accessToken);
+        Response::apiSuccess(['result' => $res]);
     }
 
     /**
@@ -125,9 +125,31 @@ class Face extends Controller {
     }
 
     /**
-     * 人脸比对
+     * 请求宇视人脸比对接口
+     * @param $faceA
+     * @param $faceB
+     * @param $token
+     * @return bool|mixed|string
+     * @throws OperateFailedException
      */
-    private function doFaceCompare() {
-
+    private function doFaceCompare($faceA, $faceB, $token) {
+        $url = sprintf("http://%s:%s/VIID/ia/face/get/similarity", $this->host, $this->port);
+        $param = [
+            'Info' => json_encode([
+                'IP' => '192.168.100.25',
+                'ThriftDesFaceInfo' => [],
+                'ThriftSrcFaceInfo' => []
+            ]),
+            'FaceA' => $faceA,
+            'FaceB' => $faceB
+        ];
+        $res = SendRequest::send('POST', $url, $param, [
+            CURLOPT_HTTPHEADER => [
+                "Authorization: $token",
+            ]
+        ]);
+        $res = json_decode($res, true);
+        var_dump($res);exit;
+        return $res;
     }
 }
