@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use App\Library\Response;
+use App\Model\User;
 use Exception;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
@@ -35,7 +36,7 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $exception)
     {
-        parent::report($exception);
+        //parent::report($exception);
     }
 
     /**
@@ -55,6 +56,7 @@ class Handler extends ExceptionHandler
             'url' => $request->fullUrl(),
             'params' => $request->all(),
             'ip' => $request->ip(),
+            'user' => User::getCurUser()
         ];
         $msg = $exception->getMessage();
         if (!empty($msg)){

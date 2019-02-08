@@ -23,9 +23,13 @@ use Laravel\Lumen\Routing\Controller;
 class Face extends Controller {
 
     private $host;
+
     private $port;
+
     private $userName;
+
     private $password;
+
 
     /**
      * 人脸预约

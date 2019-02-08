@@ -12,7 +12,6 @@ namespace App\Model;
 use App\Exceptions\OperateFailedException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Http\Request;
 
 class MBioLog extends Model {
 
