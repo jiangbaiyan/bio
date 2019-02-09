@@ -30,10 +30,10 @@ class Socket {
     public static function write($host, $port, $data) {
         self::init($host, $port);
         if ($result = socket_write(self::$socket, $data, strlen($data)) == false) {
-            Log::error('finger|socket_write_data_failed|msg:' . socket_strerror($result));
+            Log::error('finger|socket_write_data_failed|msg:' . socket_strerror(socket_last_error(self::$socket)));
             throw new OperateFailedException();
         }
-        return true;
+        return $result;
     }
 
     /**
@@ -46,8 +46,8 @@ class Socket {
      */
     public static function read($host, $port, $length) {
         self::init($host, $port);
-        if ($data = socket_read(self::$socket, $length) == false) {
-            Log::error('finger|socket_read_data_failed|msg:' . socket_strerror($data));
+        if (($data = socket_read(self::$socket, $length)) === false) {
+            Log::error('finger|socket_read_data_failed|msg:' . socket_strerror(socket_last_error(self::$socket)) . '|data:' . json_encode($data));
             throw new OperateFailedException();
         }
         return $data;
@@ -59,11 +59,11 @@ class Socket {
      * @throws OperateFailedException
      */
     private static function create() {
-        self::$socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP);
-        if (self::$socket < 0) {
-            Log::error('finger|create_socket_failed');
+        if (($socket = socket_create(AF_INET, SOCK_STREAM, SOL_TCP)) === false) {
+            Log::error('finger|create_socket_failed|msg:' . socket_strerror(socket_last_error()));
             throw new OperateFailedException();
         }
+        self::$socket = $socket;
         return true;
     }
 
@@ -75,9 +75,8 @@ class Socket {
      * @throws OperateFailedException
      */
     private static function connect($host, $port) {
-        $result = socket_connect(self::$socket, $host, $port);
-        if ($result < 0) {
-            Log::error('finger|connect_socket_failed|msg:' . socket_strerror($result));
+        if (($result = socket_connect(self::$socket, $host, $port)) === false) {
+            Log::error('finger|connect_socket_failed|msg:' . socket_strerror(socket_last_error()));
             throw new OperateFailedException();
         }
         return true;
@@ -91,7 +90,10 @@ class Socket {
      * @throws OperateFailedException
      */
     private static function init($host, $port) {
-        !isset(self::$socket) && self::create() && self::connect($host, $port);
+        if (!isset(self::$socket)){
+            self::create();
+            self::connect($host, $port);
+        }
         return true;
     }
 

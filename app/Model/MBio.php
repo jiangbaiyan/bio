@@ -30,11 +30,12 @@ class MBio extends Model {
      * 获取当前用户生物特征数据
      * @param $user
      * @return bool
+     * @throws OperateFailedException
      * @throws ResourceNotFoundException
      */
     public static function getData($user) {
         if (empty($user)) {
-            return false;
+            throw new OperateFailedException();
         }
         $bioData = MBio::where('id_card', $user['fIdCard'])->first();
         if (!$bioData) {
@@ -50,9 +51,13 @@ class MBio extends Model {
      * @param $data
      * @return bool
      * @throws OperateFailedException
+     *
      * @throws ResourceNotFoundException
      */
     public static function writeData($user, $data) {
+        if (empty($data) || !is_array($data)) {
+            throw new OperateFailedException();
+        }
         $bioData = self::getData($user);
         try {
             $bioData->update($data);
@@ -63,48 +68,5 @@ class MBio extends Model {
         return true;
     }
 
-    /**
-     * 特征图像存储
-     * @param $file
-     * @param
-     * @param $fileName
-     * @return bool
-     * @throws OperateFailedException
-     */
-    public static function saveFile($file, $dir, $fileName) {
-        if (empty($file) || empty($dir) || empty($fileName)) {
-            return false;
-        }
-        if (!$file->isValid()) {
-            Log::error('mBio|upload_file_failed');
-            throw new OperateFailedException();
-        }
-        try {
-            $file->move($dir, $fileName);
-        } catch (\Exception $e){
-            Log::error('mBio|save_file_failed|msg:' . json_encode($e->getMessage()));
-            throw new OperateFailedException();
-        }
-        return true;
-    }
-
-    /**
-     * 读取文件
-     * @param $path
-     * @return bool
-     * @throws OperateFailedException
-     */
-    public static function readFile($path) {
-        if (empty($path)) {
-            return false;
-        }
-        try {
-            $content = file_get_contents($path);
-        } catch (\Exception $e) {
-            Log::error('mBio|read_file_failed|msg:' . json_encode($e->getMessage()) . '|path:' . $path);
-            throw new OperateFailedException();
-        }
-        return $content;
-    }
 
 }

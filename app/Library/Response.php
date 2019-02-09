@@ -60,6 +60,7 @@ class Response{
             'msg' => $msg,
             'data' => $data
         ));
+        exit;
     }
 
     /**

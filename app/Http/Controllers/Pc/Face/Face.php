@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Pc\Face;
 use App\Exceptions\OperateFailedException;
 use App\Exceptions\ParamValidateFailedException;
 use App\Exceptions\ResourceNotFoundException;
+use App\Library\File;
 use App\Library\Response;
 use App\Model\MBio;
 use App\Model\MBioLog;
@@ -48,7 +49,7 @@ class Face extends Controller {
         $md5Obj = json_encode([$user['fIdCard'], $user['fName']]);//一个用户只能有一个预约照片,后面的覆盖前面的
         $fileName = md5($md5Obj) . '.' . $file->getClientOriginalExtension();
         $fullPath = $dir . '/' . $fileName;
-        MBio::saveFile($file, $dir, $fileName);
+        File::saveFile($file, $dir, $fileName);
         MBio::writeData($request, [
             'face_data' => $fullPath,
             'face_reserve_state' => MBio::STATUS_SUCCESS

@@ -10,6 +10,7 @@ namespace App\Http\Controllers\Pc\Finger;
 
 use App\Exceptions\OperateFailedException;
 use App\Exceptions\ParamValidateFailedException;
+use App\Library\File;
 use App\Library\Response;
 use App\Library\Socket;
 use Illuminate\Http\Request;
@@ -71,13 +72,13 @@ class Finger extends Controller {
      */
     private function getFingerFeature($file) {
         $fileSize = $file->getSize();
-        $fileHandle = fopen($file->getRealPath(), 'rb');
-        $content = fread($fileHandle, $fileSize);
+        $content = File::readFileAsBinary($file->getRealPath(), $fileSize);
         $processType = pack('C1', self::PROCESS_GET_FEATURE);
         $fileSize = pack('L', $fileSize);
         $data = $processType . $fileSize . $content;
         Socket::write($this->host, $this->port, $data);
         $data = Socket::read($this->host, $this->port, 5);
+        var_dump($data);exit;
         return $data;
     }
 

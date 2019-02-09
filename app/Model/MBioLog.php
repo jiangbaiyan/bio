@@ -46,7 +46,7 @@ class MBioLog extends Model {
      */
     public static function writeLog($user, $operation, $state) {
         if (empty($request) || empty($operation) || empty($state)) {
-            return false;
+            throw new OperateFailedException();
         }
         $dbData = [
             'f_name' => $user['fName'],
