@@ -56,7 +56,6 @@ class Handler extends ExceptionHandler
             'url' => $request->fullUrl(),
             'params' => $request->all(),
             'ip' => $request->ip(),
-            'user' => User::getCurUser()
         ];
         $msg = $exception->getMessage();
         if (!empty($msg)){

@@ -11,6 +11,7 @@ namespace App\Http\Controllers\Pc\Finger;
 use App\Exceptions\OperateFailedException;
 use App\Exceptions\ParamValidateFailedException;
 use App\Library\Response;
+use App\Library\Socket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Laravel\Lumen\Routing\Controller;
@@ -37,23 +38,7 @@ class Finger extends Controller {
         ]);
         $file = $request->file('finger');
         $this->loadConfig();
-//        $socket = socket_create('127.0.0.1', AF_INET, SOL_TCP);
-//        if ($socket < 0) {
-//            Log::error('finger|create_socket_failed');
-//            throw new OperateFailedException();
-//        }
-//        $result = socket_connect($socket, $this->host, $this->port);
-//        if ($socket < 0) {
-//            Log::error('finger|connect_socket_failed|msg:' . socket_strerror($result));
-//            throw new OperateFailedException();
-//        }
-        $fileSize = $file->getSize();
-        $processType = pack('C1', self::PROCESS_GET_FEATURE);
-        $fileSize = pack('L4', $fileSize);
-        $fileHandle = fopen($file->getRealPath(), 'rb');
-        $content = fread($fileHandle, $fileSize);
-        $data = $processType . $fileSize . $content;
-        var_dump($data);exit;
+        $data = $this->getFingerFeature($file);
         Response::apiSuccess();
     }
 
@@ -78,4 +63,22 @@ class Finger extends Controller {
         }
         return true;
     }
+
+    /**
+     * 获取指纹特征数据
+     * @return string
+     * @throws OperateFailedException
+     */
+    private function getFingerFeature($file) {
+        $fileSize = $file->getSize();
+        $fileHandle = fopen($file->getRealPath(), 'rb');
+        $content = fread($fileHandle, $fileSize);
+        $processType = pack('C1', self::PROCESS_GET_FEATURE);
+        $fileSize = pack('L', $fileSize);
+        $data = $processType . $fileSize . $content;
+        Socket::write($this->host, $this->port, $data);
+        $data = Socket::read($this->host, $this->port, 5);
+        return $data;
+    }
+
 }
