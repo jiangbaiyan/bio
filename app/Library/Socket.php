@@ -29,7 +29,7 @@ class Socket {
      */
     public static function write($host, $port, $data) {
         self::init($host, $port);
-        if ($result = socket_write(self::$socket, $data, strlen($data)) === false) {
+        if ($result = socket_write(self::$socket, $data, strlen($data)) == false) {
             Log::error('finger|socket_write_data_failed|msg:' . socket_strerror($result));
             throw new OperateFailedException();
         }
@@ -46,7 +46,7 @@ class Socket {
      */
     public static function read($host, $port, $length) {
         self::init($host, $port);
-        if ($data = socket_read(self::$socket, $length) === false) {
+        if ($data = socket_read(self::$socket, $length) == false) {
             Log::error('finger|socket_read_data_failed|msg:' . socket_strerror($data));
             throw new OperateFailedException();
         }
