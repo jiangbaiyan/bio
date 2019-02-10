@@ -29,7 +29,7 @@ class Socket {
      */
     public static function write($host, $port, $data) {
         self::init($host, $port);
-        if ($result = socket_write(self::$socket, $data, strlen($data)) == false) {
+        if (($result = socket_write(self::$socket, $data, strlen($data))) == false) {
             Log::error('finger|socket_write_data_failed|msg:' . socket_strerror(socket_last_error(self::$socket)));
             throw new OperateFailedException();
         }
